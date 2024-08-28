@@ -12,36 +12,6 @@ services:
       - SPRING_DATASOURCE_PASSWORD=adminpassword
     restart: on-failure
 
-  main-server:
-    container_name: main-server
-    build: ./ewm-main-service
-    ports:
-      - "8080:8080"
-    depends_on:
-      - main-db
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://main-db:5432/ewm-main
-      - SPRING_DATASOURCE_USERNAME=admin
-      - SPRING_DATASOURCE_PASSWORD=adminpassword
-    restart: on-failure
-
-  main-db:
-    image: postgres:13.7-alpine
-    container_name: main-db
-    ports:
-      - "6542:5432"
-    volumes:
-      - db-data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=ewm-main
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=adminpassword
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U admin" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
   stats-db:
     image: postgres:13.7-alpine
     container_name: stats-db
@@ -58,8 +28,39 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
+    restart: on-failure
 
 volumes:
   db-data:
   server-logs:
+
+#  main-server:
+#    container_name: main-server
+#    build: ./ewm-main-service
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      - main-db
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://main-db:5432/ewm-main
+#      - SPRING_DATASOURCE_USERNAME=admin
+#      - SPRING_DATASOURCE_PASSWORD=adminpassword
+#    restart: on-failure
+#
+#  main-db:
+#    image: postgres:13.7-alpine
+#    container_name: main-db
+#    ports:
+#      - "6542:5432"
+#    volumes:
+#      - db-data:/var/lib/postgresql/data
+#    environment:
+#      - POSTGRES_DB=ewm-main
+#      - POSTGRES_USER=admin
+#      - POSTGRES_PASSWORD=adminpassword
+#    healthcheck:
+#      test: [ "CMD-SHELL", "pg_isready -U admin" ]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 5
+#    restart: on-failure
