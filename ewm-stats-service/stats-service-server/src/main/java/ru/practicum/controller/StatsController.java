@@ -3,15 +3,16 @@ package ru.practicum.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.HitRequestDto;
 import ru.practicum.HitResponseDto;
-import ru.practicum.mapper.DateTimeMapper;
 import ru.practicum.mapper.HitMapper;
 import ru.practicum.model.Hit;
 import ru.practicum.model.StatsModel;
 import ru.practicum.service.HitService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -30,12 +31,12 @@ public class StatsController {
     }
 
     @GetMapping("/stats")
-    public List<StatsModel> getStats(@RequestParam String start,
-                                     @RequestParam String end,
+    public List<StatsModel> getStats(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
+                                     @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
                                      @RequestParam(required = false) String[] uris,
-                                     @RequestParam(required = false, defaultValue = "false") Boolean unique) {
+                                     @RequestParam(defaultValue = "false") Boolean unique) {
         log.info("Получен get запрос /stats с телом {}, unique {}, start {}, end {}", uris, unique, start, end);
-        return hitService.viewStats(DateTimeMapper.toDate(start), DateTimeMapper.toDate(end), uris, unique);
+        return hitService.viewStats(/*DateTimeMapper.toDate(*/start, /*DateTimeMapper.toDate(*/end, uris, unique);
     }
 
 }

@@ -43,10 +43,12 @@ public class StatsClient extends BaseClient {
         String encodedStart = URLEncoder.encode(start.format(formatter), StandardCharsets.UTF_8);
         String encodedEnd = URLEncoder.encode(end.format(formatter), StandardCharsets.UTF_8);
 
+        String urisString = String.join(",", uris);
+
         Map<String, Object> param = Map.of(
                 "start", encodedStart,
                 "end", encodedEnd,
-                "uris", uris,
+                "uris", urisString,
                 "unique", unique
         );
         return get(GET_STATS_PREFIX, param);
