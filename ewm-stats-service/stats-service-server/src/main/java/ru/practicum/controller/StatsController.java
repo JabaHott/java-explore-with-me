@@ -36,7 +36,7 @@ public class StatsController {
                                      @RequestParam(required = false) String[] uris,
                                      @RequestParam(defaultValue = "false") Boolean unique) {
         log.info("Получен get запрос /stats с телом {}, unique {}, start {}, end {}", uris, unique, start, end);
-        return hitService.viewStats(/*DateTimeMapper.toDate(*/start, /*DateTimeMapper.toDate(*/end, uris, unique);
+        return hitService.viewStats(start, end, uris, unique);
     }
 
 }

@@ -23,6 +23,7 @@ import java.util.Map;
 public class StatsClient extends BaseClient {
     public static final String ADD_HIT_PREFIX = "/hits";
     public static final String GET_STATS_PREFIX = "/stats";
+    public static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Autowired
     public StatsClient(@Value("${stats-service-server.url}") String serverUrl, RestTemplateBuilder builder) {
@@ -39,7 +40,6 @@ public class StatsClient extends BaseClient {
     }
 
     public ResponseEntity<Object> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) throws UnsupportedEncodingException {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String encodedStart = URLEncoder.encode(start.format(formatter), StandardCharsets.UTF_8);
         String encodedEnd = URLEncoder.encode(end.format(formatter), StandardCharsets.UTF_8);
 
