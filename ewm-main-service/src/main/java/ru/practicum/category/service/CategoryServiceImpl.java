@@ -38,7 +38,7 @@ public class CategoryServiceImpl implements CategoryService {
             log.warn("Category does not exist");
             throw new NotFoundException(catId, new Category());
         }
-//        nameCheck(categoryReqDto.getName());
+        nameCheck(categoryReqDto.getName());
         Category categoryOld = repository.getReferenceById(catId);
         if (categoryReqDto.getName() != null && !(repository.existsByName(categoryReqDto.getName()))) {
             categoryOld.setName(categoryReqDto.getName());
