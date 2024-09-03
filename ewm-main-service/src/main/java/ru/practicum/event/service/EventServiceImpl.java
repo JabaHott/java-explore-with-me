@@ -178,11 +178,10 @@ public class EventServiceImpl implements EventService {
     @Transactional
     public Event getEventsById(Long id, Integer views) {
         Event event = eventRepository.getReferenceById(id);
-        if (event.getState().equals(State.PUBLISHED)){
+        if (event.getState().equals(State.PUBLISHED)) {
             checkEvent(id);
             event.setViews(views != null ? views : 0);
-        }
-        else {
+        } else {
             throw new NotFoundException(id, new Event());
         }
         return eventRepository.save(event);
