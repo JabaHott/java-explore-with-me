@@ -1,5 +1,6 @@
 package ru.practicum.category.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ public class CategoryAdminController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CategoryRespDto createCategory(@RequestBody CategoryReqDto categoryReqDto) {
+    public CategoryRespDto createCategory(@RequestBody @Valid CategoryReqDto categoryReqDto) {
         log.info("Получен POST запрос с телом {}", categoryReqDto);
         return mapper.toCategoryRespDto(service.create(mapper.toCategory(categoryReqDto)));
     }
@@ -34,9 +35,9 @@ public class CategoryAdminController {
     }
 
     @PatchMapping("/{catId}")
-    public CategoryRespDto patchCategory(@RequestBody CategoryReqDto categoryReqDto,
+    public CategoryRespDto patchCategory(@RequestBody @Valid CategoryReqDto categoryReqDto,
                                          @PathVariable Long catId) {
-        log.info("Получен PATCH запрос с телом {}", catId);
+        log.info("Получен PATCH запрос с телом {}, {}", categoryReqDto, catId);
         return mapper.toCategoryRespDto(service.update(categoryReqDto, catId));
     }
 }

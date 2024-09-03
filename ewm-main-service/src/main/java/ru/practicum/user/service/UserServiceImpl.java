@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public Page<User> findAllUsers(Integer from, Integer size, List<Long> usersIds) {
-        if (usersIds == null) {
+        if (usersIds.isEmpty()) {
             log.info("Запрошен список всех пользователей");
             return userRepository.findAll(PageRequest.of(from, size));
         } else {
