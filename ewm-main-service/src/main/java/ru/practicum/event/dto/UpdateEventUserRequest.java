@@ -1,17 +1,17 @@
 package ru.practicum.event.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import ru.practicum.event.model.StateAction;
 import ru.practicum.location.dto.LocationDto;
-import ru.practicum.valid.EventTwoHoursPastValid;
 
 import java.time.LocalDateTime;
 
 @Data
-@EventTwoHoursPastValid
 public class UpdateEventUserRequest {
     @Size(max = 2000, min = 20)
     private String annotation;
@@ -20,6 +20,7 @@ public class UpdateEventUserRequest {
     @Size(max = 7000, min = 20)
     private String description;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @FutureOrPresent
     private LocalDateTime eventDate;
     private LocationDto location;
     private Boolean paid;

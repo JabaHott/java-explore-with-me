@@ -104,7 +104,7 @@ public class EventServiceImpl implements EventService {
             }
         } else {
             if (eventUpd.getStateAction() != null && eventUpd.getStateAction().equals(StateAction.SEND_TO_REVIEW)) {
-                event1.setState(State.PUBLISHED);
+                event1.setState(State.PENDING);
             } else {
                 throw new IncorrectEventStateException("ZDES BUDET TEXT");
             }
@@ -178,8 +178,13 @@ public class EventServiceImpl implements EventService {
     @Transactional
     public Event getEventsById(Long id, Integer views) {
         Event event = eventRepository.getReferenceById(id);
-        checkEvent(id);
-        event.setViews(views != null ? views : 0);
+        if (event.getState().equals(State.PUBLISHED)){
+            checkEvent(id);
+            event.setViews(views != null ? views : 0);
+        }
+        else {
+            throw new NotFoundException(id, new Event());
+        }
         return eventRepository.save(event);
     }
 
