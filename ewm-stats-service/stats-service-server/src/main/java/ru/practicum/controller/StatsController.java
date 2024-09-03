@@ -8,13 +8,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.HitRequestDto;
 import ru.practicum.HitResponseDto;
-import ru.practicum.mapper.HitMapper;
+import ru.practicum.mapper.StatsMapper;
 import ru.practicum.model.Hit;
 import ru.practicum.StatsDtoResponse;
 import ru.practicum.service.HitService;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
+import java.util.ArrayList;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,26 +24,25 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 public class StatsController {
-    private final HitMapper hitMapper;
     private final HitService hitService;
 
     @PostMapping("/hit")
     @ResponseStatus(HttpStatus.CREATED)
     public HitResponseDto add(@Valid @RequestBody HitRequestDto hitDto) {
         log.info("Получен Post запрос /hit с телом {}", hitDto);
-        Hit hit = hitMapper.toHit(hitDto);
+        Hit hit = StatsMapper.hitDtoRequestToHitEntity(hitDto);
         return hitService.add(hit);
     }
 
     @GetMapping("/stats")
     public List<StatsDtoResponse> getStats(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
                                            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
-                                           @RequestParam(required = false) String[] uris,
+                                           @RequestParam(required = false) List<String> uris,
                                            @RequestParam(defaultValue = "false") Boolean unique) {
-        List<String> urisList = uris != null ? Arrays.asList(uris) : null;
-        log.info("Получен get запрос /stats с телом {}, unique {}, start {}, end {}", urisList, unique, start, end);
-        return hitService.viewStats(start, end, urisList, unique).stream()
-                .map(hitMapper::toStatsDtoResponse)
+        uris = (uris == null) ? new ArrayList<>() : uris;
+        log.info("Получен get запрос /stats с телом {}, unique {}, start {}, end {}", uris, unique, start, end);
+        return hitService.viewStats(start, end, uris, unique).stream()
+                .map(StatsMapper::statsViewToStatsDtoResponse)
                 .collect(Collectors.toList());
     }
 

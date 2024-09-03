@@ -48,8 +48,10 @@ public class EventPublicController {
             HttpServletRequest request
     ) {
         log.info("Events. Public Controller: 'getAllEventsWithFiltration' method called");
-        statsClient.addHit(new HitRequestDto("http://stats-server:9090", request.getRequestURI(), request.getRemoteAddr(),
-                LocalDateTime.now()));
+        HitRequestDto hitRequestDto = new HitRequestDto("http://stats-server:9090", request.getRequestURI(), request.getRemoteAddr(),
+                LocalDateTime.now());
+        statsClient.addHit(hitRequestDto);
+        log.info(" QQQQQQQQ {}", hitRequestDto);
         return ResponseEntity.ok(
                 eventsService.getAllEventsWithFiltration(text, categories, paid, rangeStart, rangeEnd, onlyAvailable,
                                 sort, from, size).stream()
@@ -65,10 +67,14 @@ public class EventPublicController {
     ) throws UnsupportedEncodingException {
         log.info("Events. Public Controller: 'getEventsById' method called");
         String requestURI = request.getRequestURI();
-        statsClient.addHit(new HitRequestDto("http://stats-server:9090",
+        HitRequestDto hitRequestDto = new HitRequestDto("http://stats-server:9090",
                 requestURI,
                 request.getRemoteAddr(),
-                LocalDateTime.now()));
+                LocalDateTime.now());
+        log.info("dwd {}", hitRequestDto);
+
+        statsClient.addHit(hitRequestDto);
+
         ResponseEntity<Object> response = statsClient.getViews(requestURI);
         Integer views = null;
         if (response.getBody() instanceof Integer) {

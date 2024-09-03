@@ -52,9 +52,6 @@ public class HitServiceImpl implements HitService {
             log.info("Ветка 2 {}", stats);
             return stats;
         }
-//        return unique ?
-//                hitRepository.getUniqueStats(start, end, uri)
-//                : hitRepository.getStats(start, end, uri);
     }
 
     @Override
@@ -62,5 +59,4 @@ public class HitServiceImpl implements HitService {
         log.info("Stats-service. Service: 'getViews' method called");
         return hitRepository.getViews(uri);
     }
-
 }

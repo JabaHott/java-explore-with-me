@@ -21,8 +21,9 @@ import java.util.Map;
 
 @Service
 public class StatsClient extends BaseClient {
-    public static final String ADD_HIT_PREFIX = "/hits";
+    public static final String ADD_HIT_PREFIX = "/hit";
     public static final String GET_STATS_PREFIX = "/stats";
+    public static final String GET_VIEWS_PREFIX = "/views";
     public static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Autowired
@@ -58,7 +59,7 @@ public class StatsClient extends BaseClient {
         Map<String, Object> param = Map.of(
                 "uri", uri
         );
-        return get("/views" + "?uri={uri}", param);
+        return get(GET_VIEWS_PREFIX + "?uri={uri}", param);
     }
 
 }
