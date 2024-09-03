@@ -12,5 +12,6 @@ public interface CategoryMapper {
     Category toCategory(CategoryReqDto categoryReqDto);
 
     CategoryReqDto toCategoryReqDto(Category category);
+
     CategoryRespDto toCategoryRespDto(Category category);
 }

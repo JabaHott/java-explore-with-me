@@ -14,8 +14,6 @@ import ru.practicum.compilations.dto.CompilationsDtoResponse;
 import ru.practicum.compilations.mapper.CompilationsMapper;
 import ru.practicum.compilations.service.CompilationsService;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -31,7 +29,6 @@ public class CompilationsPublicController {
     private final CompilationsMapper compilationsMapper;
     private final StatsClient statsClient;
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
 
 
     @GetMapping

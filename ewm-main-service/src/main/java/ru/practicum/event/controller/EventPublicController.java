@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.HitRequestDto;
 import ru.practicum.client.StatsClient;
 import ru.practicum.event.dto.EventGetDto;
-import ru.practicum.event.dto.EventRespDto;
 import ru.practicum.event.mapper.EventMapper;
 import ru.practicum.event.service.EventService;
 
@@ -20,7 +19,6 @@ import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 

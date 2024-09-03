@@ -18,12 +18,14 @@ public interface EventMapper {
     DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Mapping(target = "eventDate", source = "eventDate", dateFormat = "yyyy-MM-dd HH:mm:ss")
-    Event toEvent (NewEventDto newEventDto);
+    Event toEvent(NewEventDto newEventDto);
 
     @Mapping(source = "category", target = "category")
     @Mapping(target = "eventDate", source = "eventDate", dateFormat = "yyyy-MM-dd HH:mm:ss")
-    EventRespDto toEventRespDto (Event eventsEntity);
-    PatchAdminRespDto toPatchAdminRespDto (Event event);
+    EventRespDto toEventRespDto(Event eventsEntity);
+
+    PatchAdminRespDto toPatchAdminRespDto(Event event);
+
     EventGetDto toEventGetDto(Event event);
 
     Category map(Long categoryId);

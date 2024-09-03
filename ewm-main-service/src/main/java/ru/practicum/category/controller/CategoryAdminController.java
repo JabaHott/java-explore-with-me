@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.category.dto.CategoryReqDto;
 import ru.practicum.category.dto.CategoryRespDto;
 import ru.practicum.category.mapper.CategoryMapper;
-import ru.practicum.category.model.Category;
 import ru.practicum.category.service.CategoryService;
 
 @RestController
@@ -22,21 +21,21 @@ public class CategoryAdminController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CategoryRespDto createCategory(@RequestBody CategoryReqDto categoryReqDto){
+    public CategoryRespDto createCategory(@RequestBody CategoryReqDto categoryReqDto) {
         log.info("Получен POST запрос с телом {}", categoryReqDto);
         return mapper.toCategoryRespDto(service.create(mapper.toCategory(categoryReqDto)));
     }
 
     @DeleteMapping("/{catId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCategory(@PathVariable Long catId){
+    public void deleteCategory(@PathVariable Long catId) {
         log.info("Получен DELETE запрос с телом {}", catId);
         service.delete(catId);
     }
 
     @PatchMapping("/{catId}")
     public CategoryRespDto patchCategory(@RequestBody CategoryReqDto categoryReqDto,
-                                         @PathVariable Long catId){
+                                         @PathVariable Long catId) {
         log.info("Получен PATCH запрос с телом {}", catId);
         return mapper.toCategoryRespDto(service.update(categoryReqDto, catId));
     }

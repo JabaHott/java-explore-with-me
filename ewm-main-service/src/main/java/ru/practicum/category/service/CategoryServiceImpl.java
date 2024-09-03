@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.category.dto.CategoryReqDto;
-import ru.practicum.category.mapper.CategoryMapper;
 import ru.practicum.category.model.Category;
 import ru.practicum.category.repository.CategoryRepository;
 import ru.practicum.exception.NotFoundException;
@@ -35,13 +34,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category update(CategoryReqDto categoryReqDto, Long catId) {
-        if (isNotExist(catId)){
+        if (isNotExist(catId)) {
             log.warn("Category does not exist");
             throw new NotFoundException(catId, new Category());
         }
         nameCheck(categoryReqDto.getName());
         Category categoryOld = repository.getReferenceById(catId);
-        if(categoryReqDto.getName() != null){
+        if (categoryReqDto.getName() != null) {
             categoryOld.setName(categoryReqDto.getName());
         }
         log.info("category {} updated", categoryOld);
@@ -57,7 +56,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category findCategoryById(Long catId) {
         log.info("Заппрошена категория {}", catId);
-        if (isNotExist(catId)){
+        if (isNotExist(catId)) {
             String error = "Category does not exist";
             log.warn(error);
             throw new NotFoundException(catId, new Category());
@@ -65,11 +64,11 @@ public class CategoryServiceImpl implements CategoryService {
         return repository.getReferenceById(catId);
     }
 
-    private boolean isNotExist(Long id){
+    private boolean isNotExist(Long id) {
         return !repository.existsById(id);
     }
 
-    private void nameCheck(String name){
+    private void nameCheck(String name) {
         if (repository.existsByName(name)) {
             throw new DataIntegrityViolationException("");
         }

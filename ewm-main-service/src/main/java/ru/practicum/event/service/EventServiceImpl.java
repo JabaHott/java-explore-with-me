@@ -48,13 +48,13 @@ public class EventServiceImpl implements EventService {
         event.setInitiator(userRepository.getReferenceById(userId));
         event.setConfirmedRequests(0);
 
-        if (event.getCreatedOn() == null ){
+        if (event.getCreatedOn() == null) {
             event.setCreatedOn(LocalDateTime.now());
         }
-        if (event.getPublishedOn() == null ){
+        if (event.getPublishedOn() == null) {
             event.setPublishedOn(LocalDateTime.now());
         }
-        if (event.getEventDate() == null ){
+        if (event.getEventDate() == null) {
             event.setEventDate(LocalDateTime.now());
         }
         event.setState(State.PENDING);
@@ -182,6 +182,7 @@ public class EventServiceImpl implements EventService {
         event.setViews(views != null ? views : 0);
         return eventRepository.save(event);
     }
+
     @Override
     @Transactional
     public Event getEventsById(Long id) {
@@ -215,7 +216,7 @@ public class EventServiceImpl implements EventService {
         if (eventUpd.getTitle() != null) {
             event.setTitle(eventUpd.getTitle());
         }
-        if (eventUpd.getDescription() !=null){
+        if (eventUpd.getDescription() != null) {
             event.setDescription(eventUpd.getDescription());
         }
         return event;

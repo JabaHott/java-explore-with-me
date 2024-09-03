@@ -26,27 +26,27 @@ public class ExceptionController {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handle(final NotFoundException e) {
         ErrorResponse errorResponse = null;
-        Long Id = e.getId();
+        Long id = e.getId();
         if (e.getObject() instanceof Category) {
-            log.error(String.format("Категория с id = %s не зарегистрирована!", Id));
+            log.error(String.format("Категория с id = %s не зарегистрирована!", id));
             errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.toString(), "The required object was not found.",
-                    String.format("Category with id=%s was not found", Id), LocalDateTime.now().format(formatter));
+                    String.format("Category with id=%s was not found", id), LocalDateTime.now().format(formatter));
         } else if (e.getObject() instanceof User) {
-            log.error(String.format("Пользователь с id = %s не зарегистрирован", Id));
+            log.error(String.format("Пользователь с id = %s не зарегистрирован", id));
             errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.toString(), "The required object was not found.",
-                    String.format("User with id=%s was not found", Id), LocalDateTime.now().format(formatter));
+                    String.format("User with id=%s was not found", id), LocalDateTime.now().format(formatter));
         } else if (e.getObject() instanceof Event) {
-            log.error(String.format("Событие с id = %s не зарегистрировано", Id));
+            log.error(String.format("Событие с id = %s не зарегистрировано", id));
             errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.toString(), "The required object was not found.",
-                    String.format("Event with id=%s was not found", Id), LocalDateTime.now().format(formatter));
-        } else if(e.getObject() instanceof RequestEntity) {
-            log.error(String.format("Заявка с id = %s не зарегистрирована", Id));
+                    String.format("Event with id=%s was not found", id), LocalDateTime.now().format(formatter));
+        } else if (e.getObject() instanceof RequestEntity) {
+            log.error(String.format("Заявка с id = %s не зарегистрирована", id));
             errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.toString(), "The required object was not found.",
-                    String.format("Request with id=%s was not found", Id), LocalDateTime.now().format(formatter));
+                    String.format("Request with id=%s was not found", id), LocalDateTime.now().format(formatter));
         } else if (e.getObject() instanceof CompilationsEntity) {
-            log.error(String.format("Подборка с id = %s не зарегистрирована!", Id));
+            log.error(String.format("Подборка с id = %s не зарегистрирована!", id));
             errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.toString(), "The required object was not found.",
-                    String.format("Compilation with id=%s was not found", Id), LocalDateTime.now().format(formatter));
+                    String.format("Compilation with id=%s was not found", id), LocalDateTime.now().format(formatter));
         }
         return errorResponse;
     }

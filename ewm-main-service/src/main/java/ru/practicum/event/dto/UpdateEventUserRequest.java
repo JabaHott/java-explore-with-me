@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Data
 @EventTwoHoursPastValid
 public class UpdateEventUserRequest {
-    @Size(max = 2000, min =20)
+    @Size(max = 2000, min = 20)
     private String annotation;
     @PositiveOrZero
     private Long category;

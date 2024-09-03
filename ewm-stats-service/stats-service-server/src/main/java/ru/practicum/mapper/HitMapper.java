@@ -16,6 +16,7 @@ public interface HitMapper {
     Hit toHit(HitRequestDto hitDto);
 
     HitResponseDto toHitResponseDto(Hit hit);
+
     StatsDtoResponse toStatsDtoResponse(StatsModel statsModel);
 
 }

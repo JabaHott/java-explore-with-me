@@ -9,7 +9,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.exception.NotFoundException;
-import ru.practicum.user.mapper.UserMapper;
 import ru.practicum.user.model.User;
 import ru.practicum.user.repository.UserRepository;
 
@@ -18,7 +17,7 @@ import java.util.List;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 //    private final UserMapper mapper;
@@ -26,7 +25,7 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public Page<User> findAllUsers(Integer from, Integer size, List<Long> usersIds) {
-        if (usersIds == null){
+        if (usersIds == null) {
             log.info("Запрошен список всех пользователей");
             return userRepository.findAll(PageRequest.of(from, size));
         } else {
@@ -50,7 +49,7 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public void deleteUser(Long userId) {
-        if (userRepository.existsById(userId)){
+        if (userRepository.existsById(userId)) {
             userRepository.deleteById(userId);
         } else {
             log.info("Could not delete not existing user");
@@ -65,8 +64,8 @@ public class UserServiceImpl implements UserService{
         return userRepository.findById(userId).orElseThrow(() -> new NotFoundException(userId, new User()));
     }
 
-    private void checkEmail(String email){
-        if (userRepository.existsByEmail(email)){
+    private void checkEmail(String email) {
+        if (userRepository.existsByEmail(email)) {
             throw new DataIntegrityViolationException("");
         }
     }

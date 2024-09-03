@@ -10,9 +10,10 @@ import ru.practicum.location.dto.LocationDto;
 import ru.practicum.user.dto.UserReqDto;
 
 import java.time.LocalDateTime;
+
 @Data
 public class EventRespDto {
-    private Long Id;
+    private Long id;
     @NotNull
     private String title;
     @NotBlank

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class EventGetDto {
-    private Long Id;
+    private Long id;
     @NotNull
     private String title;
     @NotBlank

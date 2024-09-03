@@ -47,7 +47,8 @@ public class EventsPrivateController {
                 .status(HttpStatus.CREATED)
                 .body(eventsService.create(
                         eventsMapper.toEvent(newEventDto), userId, newEventDto.getCategory(), newEventDto.getLocation())
-                );    }
+                );
+    }
 
     @GetMapping
     public ResponseEntity<List<EventRespDto>> getAllEventsByUserId(

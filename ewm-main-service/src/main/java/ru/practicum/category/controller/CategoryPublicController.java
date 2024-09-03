@@ -25,7 +25,7 @@ public class CategoryPublicController {
 
     @GetMapping
     public ResponseEntity<List<CategoryRespDto>> getAll(@PositiveOrZero @RequestParam(required = false, defaultValue = "0") Integer from,
-                                                        @PositiveOrZero @RequestParam(required = false, defaultValue = "10") Integer size){
+                                                        @PositiveOrZero @RequestParam(required = false, defaultValue = "10") Integer size) {
         log.info("Получен GET запрос всех категорий");
         return ResponseEntity.ok(service.findAllCategory(from, size).stream()
                 .map(mapper::toCategoryRespDto)
@@ -33,7 +33,7 @@ public class CategoryPublicController {
     }
 
     @GetMapping("/{catId}")
-    public ResponseEntity<CategoryRespDto> getCategory(@PathVariable(name = "catId") Long catId){
+    public ResponseEntity<CategoryRespDto> getCategory(@PathVariable(name = "catId") Long catId) {
         log.info("Получен GET запрос категории {}", catId);
         return ResponseEntity.ok(mapper.toCategoryRespDto(
                 service.findCategoryById(catId)
