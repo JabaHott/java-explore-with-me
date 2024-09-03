@@ -38,14 +38,16 @@ public class CategoryServiceImpl implements CategoryService {
             log.warn("Category does not exist");
             throw new NotFoundException(catId, new Category());
         }
-        nameCheck(categoryReqDto.getName());
+//        nameCheck(categoryReqDto.getName());
         Category categoryOld = repository.getReferenceById(catId);
-        if (categoryReqDto.getName() != null && !(repository.existsByName(categoryReqDto.getName()))) {
+        if (!repository.existsByName(categoryReqDto.getName()) ||
+                categoryOld.getName().equals(categoryReqDto.getName())) {
             categoryOld.setName(categoryReqDto.getName());
             log.info("category {} updated", categoryOld);
             return repository.save(categoryOld);
         } else {
-            return categoryOld;
+            throw new DataIntegrityViolationException("Одинаковые поля!");
+
         }
     }
 
