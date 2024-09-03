@@ -5,12 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.HitResponseDto;
+import ru.practicum.exception.IncorrectDateException;
 import ru.practicum.mapper.HitMapper;
 import ru.practicum.model.Hit;
 import ru.practicum.model.StatsModel;
 import ru.practicum.repository.HitRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,16 +36,31 @@ public class HitServiceImpl implements HitService {
     }
 
     @Override
-    public List<StatsModel> viewStats(LocalDateTime start, LocalDateTime end, String[] uris, Boolean unique) {
-        List<String> uri;
-        if (uris == null) {
-            uri = null;
-        } else {
-            uri = Arrays.asList(uris);
+    public List<StatsModel> viewStats(LocalDateTime start, LocalDateTime end, List<String> uri, Boolean unique) {
+        if (start.isAfter(end)) {
+            throw new IncorrectDateException("Дата начала интервала поиска не может быть позднее даты окончания интервала поиска");
         }
-        return unique ?
-                hitRepository.getUniqueStats(start, end, uri)
-                : hitRepository.getStats(start, end, uri);
+        List<StatsModel> stats = new ArrayList<>();
+        if (unique) {
+            log.info("start {}, end, {}, uri {}", start, end, uri);
+            stats = hitRepository.getUniqueStats(start, end, uri);
+            log.info("ветка 1{}", stats);
+            return stats;
+        } else {
+            log.info("start {}, end, {}, uri {}", start, end, uri);
+            stats = hitRepository.getStats(start, end, uri);
+            log.info("Ветка 2 {}", stats);
+            return stats;
+        }
+//        return unique ?
+//                hitRepository.getUniqueStats(start, end, uri)
+//                : hitRepository.getStats(start, end, uri);
+    }
+
+    @Override
+    public Long getViews(String uri) {
+        log.info("Stats-service. Service: 'getViews' method called");
+        return hitRepository.getViews(uri);
     }
 
 }

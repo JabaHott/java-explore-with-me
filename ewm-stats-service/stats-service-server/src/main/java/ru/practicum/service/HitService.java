@@ -10,5 +10,7 @@ import java.util.List;
 public interface HitService {
     HitResponseDto add(Hit hit);
 
-    List<StatsModel> viewStats(LocalDateTime start, LocalDateTime end, String[] uris, Boolean unique);
+    List<StatsModel> viewStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique);
+
+    Long getViews(String uri);
 }

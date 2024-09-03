@@ -4,16 +4,19 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.HitRequestDto;
 import ru.practicum.HitResponseDto;
 import ru.practicum.mapper.HitMapper;
 import ru.practicum.model.Hit;
-import ru.practicum.model.StatsModel;
+import ru.practicum.StatsDtoResponse;
 import ru.practicum.service.HitService;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
@@ -24,6 +27,7 @@ public class StatsController {
     private final HitService hitService;
 
     @PostMapping("/hit")
+    @ResponseStatus(HttpStatus.CREATED)
     public HitResponseDto add(@Valid @RequestBody HitRequestDto hitDto) {
         log.info("Получен Post запрос /hit с телом {}", hitDto);
         Hit hit = hitMapper.toHit(hitDto);
@@ -31,12 +35,20 @@ public class StatsController {
     }
 
     @GetMapping("/stats")
-    public List<StatsModel> getStats(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
-                                     @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
-                                     @RequestParam(required = false) String[] uris,
-                                     @RequestParam(defaultValue = "false") Boolean unique) {
-        log.info("Получен get запрос /stats с телом {}, unique {}, start {}, end {}", uris, unique, start, end);
-        return hitService.viewStats(start, end, uris, unique);
+    public List<StatsDtoResponse> getStats(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
+                                           @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
+                                           @RequestParam(required = false) String[] uris,
+                                           @RequestParam(defaultValue = "false") Boolean unique) {
+        List<String> urisList = uris != null ? Arrays.asList(uris) : null;
+        log.info("Получен get запрос /stats с телом {}, unique {}, start {}, end {}", urisList, unique, start, end);
+        return hitService.viewStats(start, end, urisList, unique).stream()
+                .map(hitMapper::toStatsDtoResponse)
+                .collect(Collectors.toList());
     }
 
+    @GetMapping("/views")
+    public Long getViews(@RequestParam(name = "uri") String uri) {
+        log.info("Stats-service. Controller: 'getViews' method called");
+        return hitService.getViews(uri);
+    }
 }

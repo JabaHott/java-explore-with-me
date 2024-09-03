@@ -40,8 +40,8 @@ public class StatsClient extends BaseClient {
     }
 
     public ResponseEntity<Object> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) throws UnsupportedEncodingException {
-        String encodedStart = URLEncoder.encode(start.format(formatter), StandardCharsets.UTF_8);
-        String encodedEnd = URLEncoder.encode(end.format(formatter), StandardCharsets.UTF_8);
+        String encodedStart = start != null ? URLEncoder.encode(start.format(formatter), StandardCharsets.UTF_8) : null;
+        String encodedEnd = end != null ? URLEncoder.encode(end.format(formatter), StandardCharsets.UTF_8) : null;
 
         String urisString = String.join(",", uris);
 
@@ -53,4 +53,12 @@ public class StatsClient extends BaseClient {
         );
         return get(GET_STATS_PREFIX, param);
     }
+
+    public ResponseEntity<Object> getViews(String uri) throws UnsupportedEncodingException {
+        Map<String, Object> param = Map.of(
+                "uri", uri
+        );
+        return get("/views" + "?uri={uri}", param);
+    }
+
 }
