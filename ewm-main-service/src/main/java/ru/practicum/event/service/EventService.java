@@ -3,6 +3,7 @@ package ru.practicum.event.service;
 import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.event.dto.EventRespDto;
+import ru.practicum.event.dto.UpdateEventAdminRequest;
 import ru.practicum.event.dto.UpdateEventUserRequest;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.model.State;
@@ -10,6 +11,7 @@ import ru.practicum.location.dto.LocationDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 public interface EventService {
     @Transactional
@@ -30,7 +32,7 @@ public interface EventService {
                               Integer from, Integer size);
 
     @Transactional
-    Event patchEventByAdmin(UpdateEventUserRequest eventUpd, Long eventId);
+    Event patchEventByAdmin(UpdateEventAdminRequest eventUpd, Long eventId);
 
     @Transactional
     Page<Event> getAllEventsWithFiltration(
@@ -39,8 +41,11 @@ public interface EventService {
     );
 
     @Transactional
-    Event getEventsById(Long id, Integer views);
+    Event getEventsByIdPubl(Long id);
 
     @Transactional
     Event getEventsById(Long eventId);
+
+    @Transactional
+    Set<Event> getEventsByIdIn(Set<Long> eventIds);
 }

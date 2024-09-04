@@ -54,7 +54,9 @@ public class RequestServiceImpl implements RequestService {
             if (!requestRepository.existsByEvent_IdAndRequester_Id(eventId, userId)) {
                 if (!event.getInitiator().equals(user)) {
                     if (event.getState().equals(State.PUBLISHED)) {
-                        if ((event.getParticipantLimit() == 0) || (event.getConfirmedRequests() < event.getParticipantLimit())) {
+                        if ((event.getParticipantLimit() == 0) ||
+                                (requestRepository.getConfirmedRequest(RequestStatus.CONFIRMED, eventId)
+                                        < event.getParticipantLimit())) {
                             RequestEntity request = new RequestEntity();
                             request.setCreated(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
                             request.setRequester(user);
@@ -103,7 +105,7 @@ public class RequestServiceImpl implements RequestService {
             request.setStatus(RequestStatus.CANCELED);
             return requestRepository.save(request);
         } else {
-            throw new NotFoundException(requestId, new RequestEntity());
+            throw new NotFoundException(requestId, RequestEntity.class);
         }
     }
 
@@ -130,7 +132,7 @@ public class RequestServiceImpl implements RequestService {
 
             for (Long requestId : requestsDtoUpdate.getRequestIds()) {
                 RequestEntity request = requestRepository.findById(requestId)
-                        .orElseThrow(() -> new NotFoundException(requestId, new RequestEntity()));
+                        .orElseThrow(() -> new NotFoundException(requestId, RequestEntity.class));
 
                 if (request.getStatus() != RequestStatus.PENDING) {
                     throw new DataIntegrityViolationException("Попытка обновить событие с окончательным статусом!");
@@ -149,18 +151,17 @@ public class RequestServiceImpl implements RequestService {
             updateStatus.setRejectedRequests(rejectedRequests);
             return updateStatus;
         } else {
-            throw new NotFoundException(eventId, new Event());
+            throw new NotFoundException(eventId, Event.class);
         }
     }
 
     private void handleConfirmedRequest(Event event, RequestEntity request, List<RequestsDtoResponse> confirmedRequests) {
-        if (event.getConfirmedRequests() >= event.getParticipantLimit()) {
+        if (requestRepository.getConfirmedRequest(RequestStatus.CONFIRMED, event.getId()) >= event.getParticipantLimit()) {
             throw new RequestException("The event has reached its limit of participation requests.",
                     "The participant limit has been reached");
         }
 
         request.setStatus(RequestStatus.CONFIRMED);
-        event.setConfirmedRequests(event.getConfirmedRequests() + 1);
 
         requestRepository.save(request);
         eventsRepository.save(event);

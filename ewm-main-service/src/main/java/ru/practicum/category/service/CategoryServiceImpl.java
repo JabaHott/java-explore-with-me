@@ -17,7 +17,6 @@ import ru.practicum.exception.NotFoundException;
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository repository;
-//    private final CategoryMapper mapper;
 
     @Override
     public Category create(Category category) {
@@ -36,12 +35,11 @@ public class CategoryServiceImpl implements CategoryService {
     public Category update(CategoryReqDto categoryReqDto, Long catId) {
         if (isNotExist(catId)) {
             log.warn("Category does not exist");
-            throw new NotFoundException(catId, new Category());
+            throw new NotFoundException(catId, Category.class);
         }
-//        nameCheck(categoryReqDto.getName());
         Category categoryOld = repository.getReferenceById(catId);
         if (!repository.existsByName(categoryReqDto.getName()) ||
-                categoryOld.getName().equals(categoryReqDto.getName())) {
+                repository.getReferenceById(catId).getName().equals(categoryReqDto.getName())) {
             categoryOld.setName(categoryReqDto.getName());
             log.info("category {} updated", categoryOld);
             return repository.save(categoryOld);
@@ -63,7 +61,7 @@ public class CategoryServiceImpl implements CategoryService {
         if (isNotExist(catId)) {
             String error = "Category does not exist";
             log.warn(error);
-            throw new NotFoundException(catId, new Category());
+            throw new NotFoundException(catId, Category.class);
         }
         return repository.getReferenceById(catId);
     }

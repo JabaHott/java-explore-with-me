@@ -3,11 +3,11 @@ package ru.practicum.compilations.dto;
 import lombok.Data;
 import ru.practicum.event.dto.EventRespDto;
 
-import java.util.List;
+import java.util.Set;
 
 @Data
 public class CompilationsDtoResponse {
-    private List<EventRespDto> events;
+    private Set<EventRespDto> events;
     private Long id;
     private Boolean pinned;
     private String title;

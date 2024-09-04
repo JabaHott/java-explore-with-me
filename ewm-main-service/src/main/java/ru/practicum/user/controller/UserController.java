@@ -2,6 +2,7 @@ package ru.practicum.user.controller;
 
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,8 +35,8 @@ public class UserController {
 
     @GetMapping
     public List<UserRespDto> findAllUsers(
-            @PositiveOrZero @RequestParam(required = false, defaultValue = "0") Integer from,
-            @PositiveOrZero @RequestParam(required = false, defaultValue = "10") Integer size,
+            @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
+            @Positive @RequestParam(defaultValue = "10") Integer size,
             @RequestParam(name = "ids", required = false) List<Long> usersIds
     ) {
         log.info("Получен GET запрос /users с params {}, {}, {}", from, size, usersIds);

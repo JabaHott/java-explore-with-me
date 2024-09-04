@@ -29,5 +29,6 @@ public class RequestEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "requester_id", nullable = false)
     private User requester;
+    @Enumerated(EnumType.STRING)
     private RequestStatus status;
 }

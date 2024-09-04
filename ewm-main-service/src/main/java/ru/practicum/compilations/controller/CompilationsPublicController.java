@@ -6,6 +6,7 @@ import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.HitRequestDto;
@@ -19,7 +20,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController
+@Controller
 @RequestMapping("/compilations")
 @Validated
 @Slf4j
@@ -34,12 +35,12 @@ public class CompilationsPublicController {
     @GetMapping
     public ResponseEntity<List<CompilationsDtoResponse>> getAllCompilations(
             @RequestParam(required = false) Boolean pinned,
-            @PositiveOrZero @RequestParam(required = false, defaultValue = "0") Integer from,
-            @PositiveOrZero @RequestParam(required = false, defaultValue = "10") Integer size,
+            @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
+            @Positive @RequestParam(defaultValue = "10") Integer size,
             HttpServletRequest request
     ) {
         log.info("Compilations. Public Controller: 'getAllCompilations' method called");
-        statsClient.addHit(new HitRequestDto("ewm-main-service", request.getRequestURI(), request.getRemoteAddr(),
+        statsClient.addHit(new HitRequestDto("${app-constant-name}", request.getRequestURI(), request.getRemoteAddr(),
                 LocalDateTime.now()));
         return ResponseEntity.ok(
                 compilationService.getAllCompilations(pinned, from, size).stream()
@@ -54,7 +55,7 @@ public class CompilationsPublicController {
             HttpServletRequest request
     ) {
         log.info("Compilations. Public Controller: 'getCompilationById' method called");
-        statsClient.addHit(new HitRequestDto("ewm-main-service", request.getRequestURI(), request.getRemoteAddr(),
+        statsClient.addHit(new HitRequestDto("${app-constant-name}", request.getRequestURI(), request.getRemoteAddr(),
                 LocalDateTime.now()));
         return ResponseEntity.ok(
                 compilationsMapper.fromCompilationsEntityToCompilationsDtoResponse(compilationService.getCompilationById(compId))

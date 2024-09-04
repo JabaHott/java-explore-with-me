@@ -11,6 +11,6 @@ import lombok.Setter;
 @Setter
 public class CategoryRespDto {
 
-    Long id;
-    String name;
+    private Long id;
+    private String name;
 }

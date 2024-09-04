@@ -8,11 +8,11 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserRespDto {
-    Long id;
+    private Long id;
     @NotNull
     @Email
-    String email;
+    private String email;
     @NotNull
-    String name;
+    private String name;
 }
 

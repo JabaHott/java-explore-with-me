@@ -9,11 +9,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.HitRequestDto;
-import ru.practicum.client.StatsClient;
 import ru.practicum.event.dto.EventGetDto;
 import ru.practicum.event.mapper.EventMapper;
 import ru.practicum.event.service.EventService;
+import ru.practicum.views.ViewClient;
 
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
@@ -30,7 +29,7 @@ import java.util.stream.Collectors;
 public class EventPublicController {
     private final EventService eventsService;
     private final EventMapper eventsMapper;
-    private final StatsClient statsClient;
+    private final ViewClient viewClient;
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
 
@@ -44,14 +43,11 @@ public class EventPublicController {
             @RequestParam(defaultValue = "false") Boolean onlyAvailable,
             @RequestParam(required = false) String sort,
             @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
-            @PositiveOrZero @RequestParam(defaultValue = "10") Integer size,
+            @Positive @RequestParam(defaultValue = "10") Integer size,
             HttpServletRequest request
     ) {
         log.info("Events. Public Controller: 'getAllEventsWithFiltration' method called");
-        HitRequestDto hitRequestDto = new HitRequestDto("http://stats-server:9090", request.getRequestURI(), request.getRemoteAddr(),
-                LocalDateTime.now());
-        statsClient.addHit(hitRequestDto);
-        log.info(" QQQQQQQQ {}", hitRequestDto);
+        viewClient.addHit(request);
         return ResponseEntity.ok(
                 eventsService.getAllEventsWithFiltration(text, categories, paid, rangeStart, rangeEnd, onlyAvailable,
                                 sort, from, size).stream()
@@ -66,23 +62,11 @@ public class EventPublicController {
             HttpServletRequest request
     ) throws UnsupportedEncodingException {
         log.info("Events. Public Controller: 'getEventsById' method called");
-        String requestURI = request.getRequestURI();
-        HitRequestDto hitRequestDto = new HitRequestDto("http://stats-server:9090",
-                requestURI,
-                request.getRemoteAddr(),
-                LocalDateTime.now());
-        log.info("dwd {}", hitRequestDto);
-
-        statsClient.addHit(hitRequestDto);
-
-        ResponseEntity<Object> response = statsClient.getViews(requestURI);
-        Integer views = null;
-        if (response.getBody() instanceof Integer) {
-            views = (Integer) response.getBody();
-        } else if (response.getBody() instanceof Long) {
-            views = (Integer) (response.getBody());
-        }
-        return ResponseEntity.ok(eventsMapper.toEventGetDto(eventsService.getEventsById(id, views)));
+        viewClient.addHit(request);
+        Integer views = viewClient.getViews(request);
+        EventGetDto eventGetDto = eventsMapper.toEventGetDto(eventsService.getEventsByIdPubl(id));
+        eventGetDto.setViews(views);
+        return ResponseEntity.ok(eventGetDto);
     }
 
 }

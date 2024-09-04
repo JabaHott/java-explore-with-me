@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.event.dto.EventGetDto;
 import ru.practicum.event.dto.PatchAdminRespDto;
-import ru.practicum.event.dto.UpdateEventUserRequest;
+import ru.practicum.event.dto.UpdateEventAdminRequest;
 import ru.practicum.event.mapper.EventMapper;
 import ru.practicum.event.model.State;
 import ru.practicum.event.service.EventService;
@@ -35,7 +35,7 @@ public class EventAdminController {
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeStart,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeEnd,
             @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
-            @PositiveOrZero @RequestParam(defaultValue = "10") Integer size
+            @Positive @RequestParam(defaultValue = "10") Integer size
     ) {
         log.info("Events. Admin Controller: 'getAllEvents' method called");
         return ResponseEntity.ok(
@@ -48,7 +48,7 @@ public class EventAdminController {
     @PatchMapping("/{eventId}")
     public ResponseEntity<PatchAdminRespDto> patchEventStatus(
             @Positive @PathVariable Long eventId,
-            @Valid @RequestBody UpdateEventUserRequest eventUpd
+            @Valid @RequestBody UpdateEventAdminRequest eventUpd
     ) {
         log.info("Events. Admin Controller: 'patchEventStatus' method called");
         return ResponseEntity.ok(mapper.toPatchAdminRespDto(eventsService.patchEventByAdmin(eventUpd, eventId)));

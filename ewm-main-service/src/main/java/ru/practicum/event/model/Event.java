@@ -22,20 +22,18 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String annotation;
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
-    @Column(name = "confirmed_requests")
-    private Integer confirmedRequests;
     @Column(name = "created_on")
     private LocalDateTime createdOn;
     private String description;
     @Column(name = "event_date")
     private LocalDateTime eventDate;
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "initiator_id", referencedColumnName = "id")
     private User initiator;
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id", referencedColumnName = "id")
     private Location location;
     private Boolean paid;
@@ -48,5 +46,9 @@ public class Event {
     @Enumerated(EnumType.STRING)
     private State state;
     private String title;
+//    @Column(name = "confirmed_requests")
+    @Transient
+    private Integer confirmedRequests;
+    @Transient
     private Integer views;
 }

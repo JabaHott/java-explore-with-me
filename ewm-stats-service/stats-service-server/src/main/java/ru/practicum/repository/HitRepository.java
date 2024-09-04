@@ -37,4 +37,11 @@ public interface HitRepository extends JpaRepository<Hit, Long> {
             "GROUP BY h.uri " +
             "ORDER BY count(DISTINCT h.ip) DESC")
     Long getViews(@Param("uri") String uri);
+
+    @Query("SELECT h.uri AS uri, COUNT(DISTINCT h.ip) AS count " +
+            "FROM Hit h " +
+            "WHERE h.uri IN (:eventsId) " +
+            "GROUP BY h.uri")
+    List<Object[]> countDistinctIpsByEventsId(@Param("eventsId") List<String> eventsId);
+
 }

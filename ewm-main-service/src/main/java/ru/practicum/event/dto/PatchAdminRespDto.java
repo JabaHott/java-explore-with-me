@@ -28,5 +28,4 @@ public class PatchAdminRespDto {
     private LocalDateTime publishedOn;
     private LocationDto location;
     private Boolean requestModeration;
-
 }

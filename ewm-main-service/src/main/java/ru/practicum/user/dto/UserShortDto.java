@@ -7,8 +7,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserShortDto {
-    Long id;
+    private Long id;
     @NotNull
-    String name;
+    private String name;
 }
 

@@ -16,8 +16,9 @@ import ru.practicum.event.model.Event;
 import ru.practicum.event.service.EventService;
 import ru.practicum.exception.NotFoundException;
 
-import java.util.ArrayList;
-import java.util.List;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 @Slf4j
@@ -32,21 +33,16 @@ public class CompilationsServiceImpl implements CompilationsService {
         log.info("Compilations. Service: 'addCompilation' method called");
         try {
             CompilationsEntity compilations = new CompilationsEntity();
-            List<Event> events = new ArrayList<>();
-            if (compilationsDtoRequest.getPinned() == null) {
-                compilations.setPinned(false);
-            } else {
-                compilations.setPinned(compilationsDtoRequest.getPinned());
-            }
+            Set<Event> events = new HashSet<>();
+            compilations.setPinned(compilationsDtoRequest.isPinned());
             compilations.setTitle(compilationsDtoRequest.getTitle());
             if (compilationsDtoRequest.getEvents() == null) {
                 compilations.setEvents(null);
             } else {
-                compilationsDtoRequest.getEvents().forEach(item -> {
-                    events.add(eventsService.getEventsById(item));
-                });
+                Set<Long> eventIds = compilationsDtoRequest.getEvents();
+                Set<Event> eventsList = eventsService.getEventsByIdIn(eventIds);
+                compilations.setEvents(eventsList);
             }
-            compilations.setEvents(events);
             return compilationsRepository.save(compilations);
         } catch (DataAccessException e) {
             throw new DataIntegrityViolationException(e.getMessage());
@@ -60,7 +56,7 @@ public class CompilationsServiceImpl implements CompilationsService {
         if (compilationsRepository.existsById(compId)) {
             compilationsRepository.deleteById(compId);
         } else {
-            throw new NotFoundException(compId, new CompilationsEntity());
+            throw new NotFoundException(compId, CompilationsEntity.class);
         }
     }
 
@@ -69,18 +65,16 @@ public class CompilationsServiceImpl implements CompilationsService {
     public CompilationsEntity updateCompilation(Long compId, CompilationsDtoUpdate compilationsDtoUpdate) {
         log.info("Compilations. Service: 'updateCompilation' method called");
         CompilationsEntity compilations = compilationsRepository.findById(compId).orElseThrow(() ->
-                new NotFoundException(compId, new CompilationsEntity()));
+                new NotFoundException(compId, CompilationsEntity.class));
         if (compilationsDtoUpdate.getEvents() != null) {
-            List<Event> eventsList = new ArrayList<>();
-            compilationsDtoUpdate.getEvents().forEach(item -> {
-                eventsList.add(eventsService.getEventsById(item));
-            });
-            compilations.setEvents(eventsList);
+            Set<Long> eventIds = compilationsDtoUpdate.getEvents();
+            Set<Event> eventsList = eventsService.getEventsByIdIn(eventIds);
+            compilations.setEvents(new HashSet<>(eventsList));
         }
         if (compilationsDtoUpdate.getPinned() != null) {
             compilations.setPinned(compilationsDtoUpdate.getPinned());
         }
-        if (compilationsDtoUpdate.getTitle() != null) {
+        if (compilationsDtoUpdate.getTitle() != null && !compilationsDtoUpdate.getTitle().isBlank()) {
             compilations.setTitle(compilationsDtoUpdate.getTitle());
         }
         return compilationsRepository.save(compilations);
@@ -98,6 +92,6 @@ public class CompilationsServiceImpl implements CompilationsService {
     public CompilationsEntity getCompilationById(Long compId) {
         log.info("Compilations. Service: 'getCompilationById' method called");
         return compilationsRepository.findById(compId).orElseThrow(() ->
-                new NotFoundException(compId, new CompilationsEntity()));
+                new NotFoundException(compId, CompilationsEntity.class));
     }
 }

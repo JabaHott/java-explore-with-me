@@ -20,7 +20,6 @@ import ru.practicum.request.dto.RequestsDtoUpdateStatus;
 import ru.practicum.request.mapper.RequestMapper;
 import ru.practicum.request.service.RequestService;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,8 +33,6 @@ public class EventsPrivateController {
     private final EventMapper eventsMapper;
     private final RequestMapper requestMapper;
     private final RequestService requestService;
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
 
     @PostMapping
     public ResponseEntity<EventRespDto> addEvent(
@@ -54,7 +51,7 @@ public class EventsPrivateController {
     public ResponseEntity<List<EventRespDto>> getAllEventsByUserId(
             @Positive @PathVariable Long userId,
             @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
-            @PositiveOrZero @RequestParam(defaultValue = "10") Integer size
+            @Positive @RequestParam(defaultValue = "10") Integer size
     ) {
         log.info("Events. Private Controller: 'getAllEventsByUserId' method called");
         return ResponseEntity.ok(eventsService.getEventsByCreator(userId, from, size).stream()

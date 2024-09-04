@@ -20,7 +20,6 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-//    private final UserMapper mapper;
 
     @Override
     @Transactional
@@ -53,7 +52,7 @@ public class UserServiceImpl implements UserService {
             userRepository.deleteById(userId);
         } else {
             log.info("Could not delete not existing user");
-            throw new NotFoundException(userId, new User());
+            throw new NotFoundException(userId, User.class);
         }
     }
 
@@ -61,7 +60,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User findUserById(Long userId) {
         log.info("Запрошен пользователь {}", userId);
-        return userRepository.findById(userId).orElseThrow(() -> new NotFoundException(userId, new User()));
+        return userRepository.findById(userId).orElseThrow(() -> new NotFoundException(userId, User.class));
     }
 
     private void checkEmail(String email) {

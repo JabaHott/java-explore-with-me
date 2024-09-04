@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -50,5 +51,17 @@ public class StatsController {
     public Long getViews(@RequestParam(name = "uri") String uri) {
         log.info("Stats-service. Controller: 'getViews' method called");
         return hitService.getViews(uri);
+    }
+
+    @GetMapping("/views/map")
+    public Map<Long, Long> getViews(@RequestParam(name = "uri") List<Long> eventsId) {
+        log.info("Stats-service. Controller: 'getViews' method called");
+
+        List<String> events = new ArrayList<>();
+        for (Long i : eventsId) {
+            String uri = "/events/" + i;
+            events.add(uri);
+        }
+        return hitService.getViewsMap(events);
     }
 }

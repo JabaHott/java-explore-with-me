@@ -1,17 +1,15 @@
 package ru.practicum.compilations.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
-import java.util.List;
+import java.util.Set;
 
 @Data
 public class CompilationsDtoRequest {
-    private List<Long> events;
-    private Boolean pinned;
-    @NotNull
+    private Set<Long> events;
+    private boolean pinned;
     @NotBlank
     @Size(max = 50)
     private String title;

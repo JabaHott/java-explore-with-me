@@ -14,7 +14,9 @@ import ru.practicum.repository.HitRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -43,14 +45,14 @@ public class HitServiceImpl implements HitService {
         List<StatsModel> stats = new ArrayList<>();
         if (unique) {
             log.info("start {}, end, {}, uri {}", start, end, uri);
-            stats = hitRepository.getUniqueStats(start, end, uri);
+//            stats = hitRepository.getUniqueStats(start, end, uri);
             log.info("ветка 1{}", stats);
-            return stats;
+            return hitRepository.getUniqueStats(start, end, uri);
         } else {
             log.info("start {}, end, {}, uri {}", start, end, uri);
-            stats = hitRepository.getStats(start, end, uri);
+//            stats = hitRepository.getStats(start, end, uri);
             log.info("Ветка 2 {}", stats);
-            return stats;
+            return hitRepository.getStats(start, end, uri);
         }
     }
 
@@ -58,5 +60,18 @@ public class HitServiceImpl implements HitService {
     public Long getViews(String uri) {
         log.info("Stats-service. Service: 'getViews' method called");
         return hitRepository.getViews(uri);
+    }
+
+    @Override
+    public Map<Long, Long> getViewsMap(List<String> eventsId) {
+        List<Object[]> results = hitRepository.countDistinctIpsByEventsId(eventsId);
+        Map<Long, Long> resultMap = new HashMap<>();
+        for (Object[] row : results) {
+            String uri = (String) row[0];
+            Long eventId = Long.valueOf(uri.substring(uri.lastIndexOf('/'), uri.length() - 1));
+            Long count = (Long) row[1];
+            resultMap.put(eventId, count);
+        }
+        return resultMap;
     }
 }

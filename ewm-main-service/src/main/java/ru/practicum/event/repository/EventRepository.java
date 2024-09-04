@@ -10,7 +10,7 @@ import ru.practicum.event.model.State;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
+import java.util.Set;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
 
@@ -43,15 +43,15 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "and ((:category) is null or ev.category.id in (:category)) " +
             "and (:paid is null or ev.paid=:paid) " +
             "and (ev.eventDate > current_timestamp) " +
-            "and ((:onlyAvailable = false) or (ev.participantLimit > ev.confirmedRequests)) " +
+//            "and ((:onlyAvailable = false) or (ev.participantLimit > ev.confirmedRequests)) " +
             "and (ev.state='PUBLISHED') " +
-            "order by case when :sort='EVENT_DATE' then ev.eventDate end, " +
-            "case when :sort='VIEWS' then ev.views end")
+            "order by ev.eventDate")
+//            "case when :sort='VIEWS' then ev.views end")
     Page<Event> getAllEventsWithSortWithoutDate(@Param("text") String text,
                                                        @Param("category") List<Long> category,
                                                        @Param("paid") Boolean paid,
-                                                       @Param("onlyAvailable") Boolean onlyAvailable,
-                                                       @Param("sort") String sort,
+//                                                       @Param("onlyAvailable") Boolean onlyAvailable,
+//                                                       @Param("sort") String sort,
                                                        Pageable pageable);
 
     @Query("select ev from Event as ev where " +
@@ -59,17 +59,17 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "and ((:category) is null or ev.category.id in (:category)) " +
             "and (:paid is null or ev.paid=:paid) " +
             "and (ev.eventDate between :start and :end) " +
-            "and ((:onlyAvailable = false) or (ev.participantLimit > ev.confirmedRequests)) " +
+//            "and ((:onlyAvailable = false) or (ev.participantLimit > ev.confirmedRequests)) " +
             "and (ev.state='PUBLISHED') " +
-            "order by case when :sort='EVENT_DATE' then ev.eventDate end, " +
-            "case when :sort='VIEWS' then ev.views end")
+            "order by ev.eventDate")
+//            "case when :sort='VIEWS' then ev.views end")
     Page<Event> getAllEventsWithSortWithDate(@Param("text") String text,
                                                     @Param("category") List<Long> category,
                                                     @Param("paid") Boolean paid,
-                                                    @Param("onlyAvailable") Boolean onlyAvailable,
+//                                                    @Param("onlyAvailable") Boolean onlyAvailable,
                                                     @Param("start") LocalDateTime start,
                                                     @Param("end") LocalDateTime end,
-                                                    @Param("sort") String sort,
+//                                                    @Param("sort") String sort,
                                                     Pageable pageable);
 
 
@@ -80,5 +80,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     Event findByIdAndInitiator_Id(Long eventId, Long userId);
 
 
-
+    @Query("SELECT e FROM Event e WHERE e.id IN (:eventIds)")
+    Set<Event> findByIdIn(@Param("eventIds") Set<Long> eventIds);
 }
+

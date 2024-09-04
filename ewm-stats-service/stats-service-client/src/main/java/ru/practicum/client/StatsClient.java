@@ -62,4 +62,11 @@ public class StatsClient extends BaseClient {
         return get(GET_VIEWS_PREFIX + "?uri={uri}", param);
     }
 
+    public ResponseEntity<Object> getViewsMap(List<Long> eventsId) {
+        Map<String, Object> param = Map.of(
+                "uri", eventsId
+        );
+        return get("/views/map" + "?uri={uri}", param);
+    }
+
 }

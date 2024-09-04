@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.practicum.request.model.RequestStatus;
 
-import java.util.List;
+
+import java.util.Set;
 
 @Getter
 @Setter
@@ -17,7 +18,7 @@ import java.util.List;
 public class RequestsDtoUpdate {
     @NotNull
     @NotEmpty
-    private List<Long> requestIds;
+    private Set<Long> requestIds;
     @NotNull
     private RequestStatus status;
 }

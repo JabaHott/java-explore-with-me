@@ -17,11 +17,11 @@ import lombok.Setter;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
     @NotNull(message = "Не указан адрес электронной почты (email)!")
     @Email(message = "Неверный формат поля email!")
     @Column(unique = true)
-    String email;
+    private String email;
     @NotNull
-    String name;
+    private String name;
 }
