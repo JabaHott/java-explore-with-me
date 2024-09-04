@@ -33,7 +33,6 @@ public class CompilationsServiceImpl implements CompilationsService {
         log.info("Compilations. Service: 'addCompilation' method called");
         try {
             CompilationsEntity compilations = new CompilationsEntity();
-            Set<Event> events = new HashSet<>();
             compilations.setPinned(compilationsDtoRequest.isPinned());
             compilations.setTitle(compilationsDtoRequest.getTitle());
             if (compilationsDtoRequest.getEvents() == null) {
