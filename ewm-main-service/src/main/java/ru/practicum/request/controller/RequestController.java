@@ -36,10 +36,10 @@ public class RequestController {
 
     @PostMapping
     public ResponseEntity<RequestsDtoResponse> addRequest(
-            @Positive @PathVariable Long userId,
-            @RequestParam Long eventId
+            @Positive @PathVariable(name = "userId") Long userId,
+            @Positive @RequestParam(name = "eventId") Long eventId
     ) {
-        log.info("Requests. Controller: 'addRequest' method called");
+        log.info("Requests. Controller: 'addRequest' method called, {}, {}", userId, eventId);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(
