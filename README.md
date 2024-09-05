@@ -11,3 +11,6 @@ feature_comments:
  * Добалено кол-во комментариев в сущность EventGetDto
 
 Сделаны постман-тесты
+
+Pull request
+https://github.com/JabaHott/java-explore-with-me/pull/3

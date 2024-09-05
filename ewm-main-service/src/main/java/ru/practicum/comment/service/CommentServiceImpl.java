@@ -58,7 +58,8 @@ public class CommentServiceImpl implements CommentService {
         checkUser(userId);
         checkComment(commentId);
         Comment comment = commentRepository.getReferenceById(commentId);
-        if (userId == comment.getAuthor().getId()) {
+        User user = userRepository.getReferenceById(userId);
+        if (user.equals(comment.getAuthor())) {
             comment.setBody(commentsReqDto.getBody());
             return commentRepository.save(comment);
         } else {
@@ -72,7 +73,8 @@ public class CommentServiceImpl implements CommentService {
         checkUser(userId);
         checkComment(commentId);
         Comment comment = commentRepository.getReferenceById(commentId);
-        if (userId == comment.getAuthor().getId()) {
+        User user = userRepository.getReferenceById(userId);
+        if (user.equals(comment.getAuthor())) {
             commentRepository.deleteById(commentId);
         } else {
             throw new DataIntegrityViolationException("Редактируемый комметарий оставлен другим пользователем");
