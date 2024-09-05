@@ -34,7 +34,7 @@ public class NewEventDto {
     private boolean paid;
     @PositiveOrZero
     private int participantLimit;
-    private Boolean requestModeration; // не получится оставить примитив, т.к. тесты хотят по умолчанию true что не получится сделать
+    private boolean requestModeration = true;
     @NotBlank
     @Size(max = 120, min = 3)
     private String title;

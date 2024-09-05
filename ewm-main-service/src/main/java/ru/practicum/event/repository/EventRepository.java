@@ -43,15 +43,11 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "and ((:category) is null or ev.category.id in (:category)) " +
             "and (:paid is null or ev.paid=:paid) " +
             "and (ev.eventDate > current_timestamp) " +
-//            "and ((:onlyAvailable = false) or (ev.participantLimit > ev.confirmedRequests)) " +
             "and (ev.state='PUBLISHED') " +
             "order by ev.eventDate")
-//            "case when :sort='VIEWS' then ev.views end")
     Page<Event> getAllEventsWithSortWithoutDate(@Param("text") String text,
                                                        @Param("category") List<Long> category,
                                                        @Param("paid") Boolean paid,
-//                                                       @Param("onlyAvailable") Boolean onlyAvailable,
-//                                                       @Param("sort") String sort,
                                                        Pageable pageable);
 
     @Query("select ev from Event as ev where " +
@@ -59,17 +55,13 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "and ((:category) is null or ev.category.id in (:category)) " +
             "and (:paid is null or ev.paid=:paid) " +
             "and (ev.eventDate between :start and :end) " +
-//            "and ((:onlyAvailable = false) or (ev.participantLimit > ev.confirmedRequests)) " +
             "and (ev.state='PUBLISHED') " +
             "order by ev.eventDate")
-//            "case when :sort='VIEWS' then ev.views end")
     Page<Event> getAllEventsWithSortWithDate(@Param("text") String text,
                                                     @Param("category") List<Long> category,
                                                     @Param("paid") Boolean paid,
-//                                                    @Param("onlyAvailable") Boolean onlyAvailable,
                                                     @Param("start") LocalDateTime start,
                                                     @Param("end") LocalDateTime end,
-//                                                    @Param("sort") String sort,
                                                     Pageable pageable);
 
 

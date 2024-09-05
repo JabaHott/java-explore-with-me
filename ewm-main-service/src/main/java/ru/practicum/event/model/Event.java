@@ -46,7 +46,6 @@ public class Event {
     @Enumerated(EnumType.STRING)
     private State state;
     private String title;
-//    @Column(name = "confirmed_requests")
     @Transient
     private Integer confirmedRequests;
     @Transient

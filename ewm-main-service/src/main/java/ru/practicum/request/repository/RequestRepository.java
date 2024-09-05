@@ -24,4 +24,7 @@ public interface RequestRepository extends JpaRepository<RequestEntity, Long> {
 
     @Query("SELECT COUNT(r) FROM RequestEntity r WHERE r.status = :status AND r.event.id = :eventId")
     Integer getConfirmedRequest(@Param("status") RequestStatus status, @Param("eventId") Long eventId);
+
+    @Query("SELECT r FROM RequestEntity r WHERE r.status = :status AND r.event.id IN :eventIds")
+    List<RequestEntity> getConfirmedRequestsByEventIds(@Param("eventIds") List<Long> eventIds, @Param("status") RequestStatus status);
 }

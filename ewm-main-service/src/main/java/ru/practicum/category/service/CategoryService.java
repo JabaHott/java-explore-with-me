@@ -4,6 +4,8 @@ import org.springframework.data.domain.Page;
 import ru.practicum.category.dto.CategoryReqDto;
 import ru.practicum.category.model.Category;
 
+import java.util.List;
+
 public interface CategoryService {
 
     Category create(Category category);
@@ -15,4 +17,6 @@ public interface CategoryService {
     Page<Category> findAllCategory(Integer from, Integer size);
 
     Category findCategoryById(Long catId);
+
+    Long countByIdIn(List<Long> categories);
 }

@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.request.dto.RequestsDtoResponse;
 import ru.practicum.request.mapper.RequestMapper;
@@ -13,10 +15,11 @@ import ru.practicum.request.service.RequestService;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController
+@Controller
 @RequestMapping("/users/{userId}/requests")
 @Slf4j
 @RequiredArgsConstructor
+@Validated
 public class RequestController {
     private final RequestService requestService;
     private final RequestMapper requestMapper;

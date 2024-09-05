@@ -44,13 +44,10 @@ public class HitServiceImpl implements HitService {
         }
         List<StatsModel> stats = new ArrayList<>();
         if (unique) {
-            log.info("start {}, end, {}, uri {}", start, end, uri);
-//            stats = hitRepository.getUniqueStats(start, end, uri);
-            log.info("ветка 1{}", stats);
+            log.info("start {}, end, {}, uri {}", start, end, uri);log.info("ветка 1{}", stats);
             return hitRepository.getUniqueStats(start, end, uri);
         } else {
             log.info("start {}, end, {}, uri {}", start, end, uri);
-//            stats = hitRepository.getStats(start, end, uri);
             log.info("Ветка 2 {}", stats);
             return hitRepository.getStats(start, end, uri);
         }

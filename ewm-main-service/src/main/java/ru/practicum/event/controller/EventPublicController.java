@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.event.dto.EventGetDto;
@@ -16,12 +17,11 @@ import ru.practicum.views.ViewClient;
 
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
 
-@RestController
+@Controller
 @RequestMapping("/events")
 @Validated
 @Slf4j
@@ -30,8 +30,6 @@ public class EventPublicController {
     private final EventService eventsService;
     private final EventMapper eventsMapper;
     private final ViewClient viewClient;
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
 
     @GetMapping
     public ResponseEntity<List<EventGetDto>> getAllEventsWithFiltration(

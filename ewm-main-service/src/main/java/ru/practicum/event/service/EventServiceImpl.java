@@ -23,6 +23,7 @@ import ru.practicum.location.dto.LocationDto;
 import ru.practicum.location.mapper.LocationMapper;
 import ru.practicum.location.model.Location;
 import ru.practicum.location.repository.LocationRepository;
+import ru.practicum.request.model.RequestEntity;
 import ru.practicum.request.model.RequestStatus;
 import ru.practicum.request.repository.RequestRepository;
 import ru.practicum.user.model.User;
@@ -71,9 +72,6 @@ public class EventServiceImpl implements EventService {
         }
         if (event.getParticipantLimit() == null) {
             event.setParticipantLimit(0);
-        }
-        if (event.getRequestModeration() == null) {
-            event.setRequestModeration(true);
         }
         event.setViews(0);
         return mapper.toEventRespDto(eventRepository.save(event));
@@ -166,12 +164,18 @@ public class EventServiceImpl implements EventService {
     ) {
         log.info("Events. Service: 'getAllEventsWithFiltration' method called");
         if (categories != null) {
-            try {
-                categories.forEach(categoryService::findCategoryById);
-            } catch (NotFoundException e) {
+            Long count = categoryService.countByIdIn(categories);
+            if (count != categories.size()) {
                 throw new ValidationException("ZDES BUDET TEXT");
             }
         }
+//        if (categories != null) {
+//            try {
+//                categories.forEach(categoryService::findCategoryById);
+//            } catch (NotFoundException e) {
+//                throw new ValidationException("ZDES BUDET TEXT");
+//            }
+//        }
         Page<Event> page = null;
         String formattedText = "%" + text.toLowerCase() + "%";
         if (start == null || end == null) {
@@ -186,9 +190,7 @@ public class EventServiceImpl implements EventService {
             page = filterByAvailability(page);
         }
         if (sort != null) {
-            if (sort.equals("EVENT_DATE")) {
-//            page = sortByEventDate(page);
-            } else {
+            if (sort.equals("VIEWS")) {
                 page = sortByViews(page);
             }
         }
@@ -293,11 +295,15 @@ public class EventServiceImpl implements EventService {
     private Page<Event> fillViewsCr(Page<Event> page) {
         List<Long> eventsId = new ArrayList<>();
         for (Event e : page) {
-            e.setConfirmedRequests(requestRepository.getConfirmedRequest(RequestStatus.CONFIRMED, e.getId())); // заполняем ConfirmedRequest
-            eventsId.add(e.getId()); // собираем ид для запроса
+            eventsId.add(e.getId());
         }
-        Map<Long, Integer> views = client.getViews(eventsId); // собрали views
+        List<RequestEntity> confirmedRequests = requestRepository.getConfirmedRequestsByEventIds(eventsId, RequestStatus.CONFIRMED);
+        Map<Long, Integer> confirmedRequestsMap = confirmedRequests.stream()
+                .collect(Collectors.groupingBy(r -> r.getEvent().getId(), Collectors.summingInt(r -> 1)));
+        Map<Long, Integer> views = client.getViews(eventsId);
+
         for (Event e : page) {
+            e.setConfirmedRequests(confirmedRequestsMap.getOrDefault(e.getId(), 0));
             e.setViews(views.get(e.getId())); // заполняем views
         }
         return page;

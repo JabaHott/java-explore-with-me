@@ -11,6 +11,8 @@ import ru.practicum.category.model.Category;
 import ru.practicum.category.repository.CategoryRepository;
 import ru.practicum.exception.NotFoundException;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -64,6 +66,11 @@ public class CategoryServiceImpl implements CategoryService {
             throw new NotFoundException(catId, Category.class);
         }
         return repository.getReferenceById(catId);
+    }
+
+    @Override
+    public Long countByIdIn(List<Long> categories) {
+        return repository.countByIdIn(categories);
     }
 
     private boolean isNotExist(Long id) {
