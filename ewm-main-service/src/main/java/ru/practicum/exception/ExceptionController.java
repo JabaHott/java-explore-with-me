@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.category.model.Category;
+import ru.practicum.comment.model.Comment;
 import ru.practicum.compilations.model.CompilationsEntity;
 import ru.practicum.event.model.Event;
 import ru.practicum.request.model.RequestEntity;
@@ -45,6 +46,10 @@ public class ExceptionController {
             log.error("Получен статус 404 Not found {}", e.getMessage(), e);
             errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.toString(), "The required object was not found.",
                     String.format("Compilation with id=%s was not found", id), LocalDateTime.now());
+        } else if (e.getType().equals(Comment.class)) {
+            log.error("Получен статус 404 Not found {}", e.getMessage(), e);
+            errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.toString(), "The required object was not found.",
+                    String.format("Comment with id=%s was not found", id), LocalDateTime.now());
         }
         return errorResponse;
     }

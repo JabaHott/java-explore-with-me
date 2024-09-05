@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.category.service.CategoryService;
 import ru.practicum.client.EventClient;
+import ru.practicum.comment.model.Comment;
+import ru.practicum.comment.repository.CommentRepository;
 import ru.practicum.event.dto.EventRespDto;
 import ru.practicum.event.dto.UpdateEventAdminRequest;
 import ru.practicum.event.dto.UpdateEventRequest;
@@ -45,6 +47,7 @@ public class EventServiceImpl implements EventService {
     private final CategoryService categoryService;
     private final LocationMapper locationMapper;
     private final RequestRepository requestRepository;
+    private final CommentRepository commentRepository;
     private final EventClient client;
 
     @Override
@@ -169,13 +172,6 @@ public class EventServiceImpl implements EventService {
                 throw new ValidationException("ZDES BUDET TEXT");
             }
         }
-//        if (categories != null) {
-//            try {
-//                categories.forEach(categoryService::findCategoryById);
-//            } catch (NotFoundException e) {
-//                throw new ValidationException("ZDES BUDET TEXT");
-//            }
-//        }
         Page<Event> page = null;
         String formattedText = "%" + text.toLowerCase() + "%";
         if (start == null || end == null) {
@@ -192,6 +188,8 @@ public class EventServiceImpl implements EventService {
         if (sort != null) {
             if (sort.equals("VIEWS")) {
                 page = sortByViews(page);
+            } else if (sort.equals("COMMENTS")) {
+                page = sortByComments(page);
             }
         }
         return page;
@@ -285,6 +283,12 @@ public class EventServiceImpl implements EventService {
 
     }
 
+    public Page<Event> sortByComments(Page<Event> page) {
+        return new PageImpl<>(page.stream()
+                .sorted((e1, e2) -> e2.getComments().compareTo(e1.getComments()))
+                .collect(Collectors.toList()));
+    }
+
 
     public Page<Event> filterByAvailability(Page<Event> page) {
         return new PageImpl<>(page.stream()
@@ -298,11 +302,15 @@ public class EventServiceImpl implements EventService {
             eventsId.add(e.getId());
         }
         List<RequestEntity> confirmedRequests = requestRepository.getConfirmedRequestsByEventIds(eventsId, RequestStatus.CONFIRMED);
+        List<Comment> comments = commentRepository.getEventsComments(eventsId);
+        Map<Long, Integer> commentsMap = comments.stream()
+                .collect(Collectors.groupingBy(c -> c.getEvent().getId(), Collectors.summingInt(c -> 1)));
         Map<Long, Integer> confirmedRequestsMap = confirmedRequests.stream()
                 .collect(Collectors.groupingBy(r -> r.getEvent().getId(), Collectors.summingInt(r -> 1)));
         Map<Long, Integer> views = client.getViews(eventsId);
 
         for (Event e : page) {
+            e.setComments(commentsMap.getOrDefault(e.getId(), 0));
             e.setConfirmedRequests(confirmedRequestsMap.getOrDefault(e.getId(), 0));
             e.setViews(views.get(e.getId())); // заполняем views
         }
