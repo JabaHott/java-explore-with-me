@@ -21,8 +21,9 @@ import java.util.Map;
 
 @Service
 public class StatsClient extends BaseClient {
-    public static final String ADD_HIT_PREFIX = "/hits";
+    public static final String ADD_HIT_PREFIX = "/hit";
     public static final String GET_STATS_PREFIX = "/stats";
+    public static final String GET_VIEWS_PREFIX = "/views";
     public static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Autowired
@@ -40,8 +41,8 @@ public class StatsClient extends BaseClient {
     }
 
     public ResponseEntity<Object> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) throws UnsupportedEncodingException {
-        String encodedStart = URLEncoder.encode(start.format(formatter), StandardCharsets.UTF_8);
-        String encodedEnd = URLEncoder.encode(end.format(formatter), StandardCharsets.UTF_8);
+        String encodedStart = start != null ? URLEncoder.encode(start.format(formatter), StandardCharsets.UTF_8) : null;
+        String encodedEnd = end != null ? URLEncoder.encode(end.format(formatter), StandardCharsets.UTF_8) : null;
 
         String urisString = String.join(",", uris);
 
@@ -53,4 +54,19 @@ public class StatsClient extends BaseClient {
         );
         return get(GET_STATS_PREFIX, param);
     }
+
+    public ResponseEntity<Object> getViews(String uri) throws UnsupportedEncodingException {
+        Map<String, Object> param = Map.of(
+                "uri", uri
+        );
+        return get(GET_VIEWS_PREFIX + "?uri={uri}", param);
+    }
+
+    public ResponseEntity<Object> getViewsMap(List<Long> eventsId) {
+        Map<String, Object> param = Map.of(
+                "uri", eventsId
+        );
+        return get("/views/map" + "?uri={uri}", param);
+    }
+
 }

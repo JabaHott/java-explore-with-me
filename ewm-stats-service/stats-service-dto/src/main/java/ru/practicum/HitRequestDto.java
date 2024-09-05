@@ -25,7 +25,7 @@ public class HitRequestDto {
     @Size(max = 50)
     private String ip;
     @NotNull
-    @JsonFormat(pattern = "yyyy-mm-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime timestamp;
 }

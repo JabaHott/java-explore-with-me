@@ -5,6 +5,8 @@ import org.mapstruct.ReportingPolicy;
 import ru.practicum.HitRequestDto;
 import ru.practicum.HitResponseDto;
 import ru.practicum.model.Hit;
+import ru.practicum.StatsDtoResponse;
+import ru.practicum.model.StatsModel;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface HitMapper {
@@ -14,5 +16,7 @@ public interface HitMapper {
     Hit toHit(HitRequestDto hitDto);
 
     HitResponseDto toHitResponseDto(Hit hit);
+
+    StatsDtoResponse toStatsDtoResponse(StatsModel statsModel);
 
 }
