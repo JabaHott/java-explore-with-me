@@ -30,4 +30,5 @@ public class EventGetDto {
     private LocalDateTime publishedOn;
     private LocationDto location;
     private Boolean requestModeration;
+    private Integer comments;
 }
